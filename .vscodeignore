@@ -1,0 +1,12 @@
+.vscode-test
+.vscode-test-compile
+.vscode-test-coverage
+.vscode-test-reports
+.vscode-test-results
+.vscodeignore
+npm-debug.log
+vscode-debug.log
+.DS_Store
+.nyc_output
+node_modules
+out/test

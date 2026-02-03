@@ -80,7 +80,7 @@ Keep this terminal running while you develop. It will automatically recompile yo
 
 4. **Install the extension locally**:
    ```bash
-   code --install-extension comodoro-0.0.5.vsix
+   code --install-extension comodoro-0.0.6.vsix
    ```
 
    Or use the VS Code UI:

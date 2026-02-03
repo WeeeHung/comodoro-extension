@@ -2,13 +2,28 @@ import * as vscode from 'vscode';
 
 // --- DATA & TYPES ---
 
-const stretchReminders = [
+type ReminderTimer = {
+    label: string;
+    seconds: number;
+};
+
+type Reminder = {
+    text: string;
+    details: string[];
+    timer?: ReminderTimer;
+};
+
+const stretchReminders: Reminder[] = [
     {
         text: 'Time to stretch your neck!',
         details: [
             'Gently tilt your head from side to side.',
-            'Hold each stretch for 15-20 seconds.'
-        ]
+            'Hold each stretch for 20 seconds.'
+        ],
+        timer: {
+            label: 'Neck stretch (20s)',
+            seconds: 20
+        }
     },
     {
         text: 'Stretch your wrists and fingers!',
@@ -23,19 +38,79 @@ const stretchReminders = [
         details: [
             'While seated, place your right hand on your left knee.',
             'Gently twist your torso to the left.',
-            'Hold for 10-15 seconds and repeat on the other side.'
+            'Hold for 15 seconds and repeat on the other side.'
+        ],
+        timer: {
+            label: 'Seated twist hold (15s)',
+            seconds: 15
+        }
+    },
+    {
+        text: 'Roll your shoulders!',
+        details: [
+            'Sit or stand tall with your arms relaxed.',
+            'Roll your shoulders up, back, and down.',
+            'Repeat 10 times, then reverse direction.'
         ]
+    },
+    {
+        text: 'Open your chest!',
+        details: [
+            'Interlace your fingers behind your back.',
+            'Lift your hands slightly and broaden your chest.',
+            'Hold for 20 seconds while breathing steadily.'
+        ],
+        timer: {
+            label: 'Chest opener (20s)',
+            seconds: 20
+        }
+    },
+    {
+        text: 'Seated hamstring stretch!',
+        details: [
+            'Extend one leg straight with your heel on the floor.',
+            'Hinge forward from your hips with a long spine.',
+            'Hold for 20 seconds, then switch legs.'
+        ],
+        timer: {
+            label: 'Hamstring hold (20s)',
+            seconds: 20
+        }
+    },
+    {
+        text: 'Do ankle circles!',
+        details: [
+            'Lift one foot slightly off the ground.',
+            'Rotate your ankle 10 times in each direction.',
+            'Switch to the other foot.'
+        ]
+    },
+    {
+        text: 'Upper trap stretch!',
+        details: [
+            'Sit tall and gently drop your right ear toward your shoulder.',
+            'Use your right hand for light pressure.',
+            'Hold for 15 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Upper trap hold (15s)',
+            seconds: 15
+        }
     }
 ];
 
-const coreReminders = [
+const coreReminders: Reminder[] = [
     {
         text: 'Engage your core!',
         details: [
             'Sit up straight, away from the back of your chair.',
             'Pull your belly button in towards your spine.',
             'Hold for 30 seconds while breathing normally.'
-        ]
+        ],
+        timer: {
+            label: 'Core brace (30s)',
+            seconds: 30
+        }
     },
     {
         text: 'Do a few seated leg lifts!',
@@ -44,15 +119,79 @@ const coreReminders = [
             'Extend one leg out straight in front of you.',
             'Hold for 10 seconds, then lower it slowly.',
             'Repeat 5 times for each leg.'
-        ]
+        ],
+        timer: {
+            label: 'Leg lift hold (10s)',
+            seconds: 10
+        }
     },
     {
-        text: 'Practice deep breathing!',
+        text: 'Try box breathing!',
         details: [
-            'Inhale deeply through your nose for a count of 4.',
-            'Hold your breath for a count of 4.',
-            'Exhale slowly through your mouth for a count of 6.',
-            'This engages your diaphragm and core muscles.'
+            'Inhale through your nose for 4 seconds.',
+            'Hold your breath for 4 seconds.',
+            'Exhale slowly for 4 seconds.',
+            'Pause for 4 seconds, then repeat.'
+        ],
+        timer: {
+            label: 'Breathing phase (4s)',
+            seconds: 4
+        }
+    },
+    {
+        text: 'Seated marches!',
+        details: [
+            'Sit tall and brace your core.',
+            'Lift one knee toward your chest, then switch.',
+            'Continue for 30 seconds.'
+        ],
+        timer: {
+            label: 'Seated march (30s)',
+            seconds: 30
+        }
+    },
+    {
+        text: 'Glute squeeze holds!',
+        details: [
+            'Squeeze your glutes as firmly as you can.',
+            'Hold for 10 seconds, then relax.',
+            'Repeat 5 times.'
+        ],
+        timer: {
+            label: 'Glute squeeze (10s)',
+            seconds: 10
+        }
+    },
+    {
+        text: 'Wall sit!',
+        details: [
+            'Stand with your back against a wall.',
+            'Slide down until your knees are near 90 degrees.',
+            'Hold for 30 seconds.'
+        ],
+        timer: {
+            label: 'Wall sit (30s)',
+            seconds: 30
+        }
+    },
+    {
+        text: 'Bird-dog balance!',
+        details: [
+            'From hands and knees, extend your right arm and left leg.',
+            'Keep your hips level and core engaged.',
+            'Hold for 5 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Bird-dog hold (5s)',
+            seconds: 5
+        }
+    },
+    {
+        text: 'Standing cross-body crunch!',
+        details: [
+            'Stand tall with hands behind your head.',
+            'Bring your right knee toward your left elbow.',
+            'Alternate sides for 10 controlled reps.'
         ]
     }
 ];
@@ -61,8 +200,105 @@ let lastReminderType: 'stretch' | 'core' = 'core';
 
 // --- WEBVIEW PANEL CONTENT ---
 
-function getReminderContent(reminder: { text: string, details: string[] }, intervalInMinutes: number) {
+function getReminderContent(reminder: Reminder, intervalInMinutes: number) {
     const instructions = reminder.details.map(step => `<li>${step}</li>`).join('');
+    const timerSection = reminder.timer
+        ? `
+            <section class="timer" data-timer="true" data-initial-seconds="${reminder.timer.seconds}">
+                <h2>Timer: ${reminder.timer.label}</h2>
+                <div class="timer-display" id="timer-display"></div>
+                <div class="timer-controls">
+                    <button id="timer-start">Start</button>
+                    <button id="timer-pause" class="secondary">Pause</button>
+                    <button id="timer-stop" class="secondary">Stop</button>
+                    <button id="timer-reset">Reset</button>
+                </div>
+            </section>`
+        : '';
+    const timerScript = reminder.timer
+        ? `
+            <script>
+                (function() {
+                    const timerSection = document.querySelector('[data-timer="true"]');
+                    if (!timerSection) {
+                        return;
+                    }
+
+                    const display = document.getElementById('timer-display');
+                    const startButton = document.getElementById('timer-start');
+                    const pauseButton = document.getElementById('timer-pause');
+                    const stopButton = document.getElementById('timer-stop');
+                    const resetButton = document.getElementById('timer-reset');
+                    const initialSeconds = Number(timerSection.getAttribute('data-initial-seconds') || '0');
+
+                    if (!display || !startButton || !pauseButton || !stopButton || !resetButton || Number.isNaN(initialSeconds) || initialSeconds <= 0) {
+                        return;
+                    }
+
+                    let remainingSeconds = initialSeconds;
+                    let intervalId = null;
+
+                    const formatTime = (totalSeconds) => {
+                        const minutes = Math.floor(totalSeconds / 60);
+                        const seconds = totalSeconds % 60;
+                        return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+                    };
+
+                    const updateDisplay = () => {
+                        display.textContent = formatTime(remainingSeconds);
+                    };
+
+                    const clearTimer = () => {
+                        if (intervalId !== null) {
+                            clearInterval(intervalId);
+                            intervalId = null;
+                        }
+                    };
+
+                    const tick = () => {
+                        remainingSeconds = Math.max(remainingSeconds - 1, 0);
+                        updateDisplay();
+                        if (remainingSeconds === 0) {
+                            clearTimer();
+                        }
+                    };
+
+                    const startTimer = () => {
+                        if (intervalId !== null) {
+                            return;
+                        }
+                        if (remainingSeconds === 0) {
+                            remainingSeconds = initialSeconds;
+                        }
+                        updateDisplay();
+                        intervalId = window.setInterval(tick, 1000);
+                    };
+
+                    const pauseTimer = () => {
+                        clearTimer();
+                    };
+
+                    const stopTimer = () => {
+                        clearTimer();
+                        remainingSeconds = 0;
+                        updateDisplay();
+                    };
+
+                    const resetTimer = () => {
+                        clearTimer();
+                        remainingSeconds = initialSeconds;
+                        updateDisplay();
+                    };
+
+                    updateDisplay();
+
+                    startButton.addEventListener('click', startTimer);
+                    pauseButton.addEventListener('click', pauseTimer);
+                    stopButton.addEventListener('click', stopTimer);
+                    resetButton.addEventListener('click', resetTimer);
+                }());
+            </script>`
+        : '';
 
     return `<!DOCTYPE html>
         <html lang="en">
@@ -81,6 +317,43 @@ function getReminderContent(reminder: { text: string, details: string[] }, inter
                 p, li { font-size: 1.1em; }
                 ol { padding-left: 20px; }
                 .intro { font-style: italic; opacity: 0.8; margin-bottom: 1.5em; }
+                .timer {
+                    margin-top: 1.5em;
+                    padding: 1em;
+                    border: 1px solid var(--vscode-editorWidget-border);
+                    border-radius: 6px;
+                    background: var(--vscode-editorWidget-background);
+                }
+                .timer h2 {
+                    margin: 0 0 0.5em;
+                    font-size: 1.2em;
+                }
+                .timer-display {
+                    font-size: 2em;
+                    font-weight: 600;
+                    margin-bottom: 0.6em;
+                }
+                .timer-controls {
+                    display: flex;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                }
+                .timer-controls button {
+                    background: var(--vscode-button-background);
+                    color: var(--vscode-button-foreground);
+                    border: none;
+                    border-radius: 4px;
+                    padding: 6px 12px;
+                    cursor: pointer;
+                }
+                .timer-controls button.secondary {
+                    background: var(--vscode-button-secondaryBackground);
+                    color: var(--vscode-button-secondaryForeground);
+                }
+                .timer-controls button:focus {
+                    outline: 1px solid var(--vscode-focusBorder);
+                    outline-offset: 2px;
+                }
             </style>
         </head>
         <body>
@@ -89,6 +362,8 @@ function getReminderContent(reminder: { text: string, details: string[] }, inter
             <ol>
                 ${instructions}
             </ol>
+            ${timerSection}
+            ${timerScript}
         </body>
         </html>`;
 }
@@ -216,7 +491,7 @@ function startTimer(context: vscode.ExtensionContext) {
         const stretchEnabled = context.globalState.get('stretchEnabled', true);
         const coreEnabled = context.globalState.get('coreEnabled', true);
 
-        let possibleReminders: { text: string; details: string[]; }[] = [];
+        let possibleReminders: Reminder[] = [];
         
         // Decide which pool to draw from
         if (stretchEnabled && coreEnabled) {
@@ -250,7 +525,7 @@ function startTimer(context: vscode.ExtensionContext) {
                 'wellnessReminder',
                 'Wellness Reminder',
                 { viewColumn: vscode.ViewColumn.Two, preserveFocus: true },
-                {}
+                { enableScripts: true }
             );
             reminderWebviewPanel.webview.html = getReminderContent(reminder, intervalInMinutes);
 

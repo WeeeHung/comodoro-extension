@@ -2,7 +2,7 @@
 
 A simple, configurable extension to remind you to take breaks and care for your physical health while you code.
 
-![Screenshot of the Wellness Reminder extension settings panel](https://i.imgur.com/your-screenshot.png) <!-- It's recommended to replace this with an actual screenshot -->
+![Screenshot of the Comodoro extension settings panel](images/Screenshot-1.png)
 
 ## Why?
 

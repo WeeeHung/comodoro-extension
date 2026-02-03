@@ -205,13 +205,17 @@ function getReminderContent(reminder: Reminder, intervalInMinutes: number) {
     const timerSection = reminder.timer
         ? `
             <section class="timer" data-timer="true" data-initial-seconds="${reminder.timer.seconds}">
-                <h2>Timer: ${reminder.timer.label}</h2>
-                <div class="timer-display" id="timer-display"></div>
+                <div class="timer-header">
+                    <h2>${reminder.timer.label}</h2>
+                </div>
+                <div class="timer-display-container">
+                    <div class="timer-display" id="timer-display"></div>
+                </div>
                 <div class="timer-controls">
-                    <button id="timer-start">Start</button>
-                    <button id="timer-pause" class="secondary">Pause</button>
-                    <button id="timer-stop" class="secondary">Stop</button>
-                    <button id="timer-reset">Reset</button>
+                    <button id="timer-start" class="btn-primary">Start</button>
+                    <button id="timer-pause" class="btn-secondary" style="display: none;">Pause</button>
+                    <button id="timer-reset" class="btn-secondary">Reset</button>
+                    <button id="timer-stop" class="btn-secondary">Stop</button>
                 </div>
             </section>`
         : '';
@@ -237,6 +241,7 @@ function getReminderContent(reminder: Reminder, intervalInMinutes: number) {
 
                     let remainingSeconds = initialSeconds;
                     let intervalId = null;
+                    let isRunning = false;
 
                     const formatTime = (totalSeconds) => {
                         const minutes = Math.floor(totalSeconds / 60);
@@ -246,12 +251,22 @@ function getReminderContent(reminder: Reminder, intervalInMinutes: number) {
 
                     const updateDisplay = () => {
                         display.textContent = formatTime(remainingSeconds);
+                        
+                        // Update button states
+                        if (isRunning) {
+                            startButton.style.display = 'none';
+                            pauseButton.style.display = 'inline-block';
+                        } else {
+                            startButton.style.display = 'inline-block';
+                            pauseButton.style.display = 'none';
+                        }
                     };
 
                     const clearTimer = () => {
                         if (intervalId !== null) {
                             clearInterval(intervalId);
                             intervalId = null;
+                            isRunning = false;
                         }
                     };
 
@@ -260,6 +275,7 @@ function getReminderContent(reminder: Reminder, intervalInMinutes: number) {
                         updateDisplay();
                         if (remainingSeconds === 0) {
                             clearTimer();
+                            display.classList.add('timer-complete');
                         }
                     };
 
@@ -270,23 +286,28 @@ function getReminderContent(reminder: Reminder, intervalInMinutes: number) {
                         if (remainingSeconds === 0) {
                             remainingSeconds = initialSeconds;
                         }
+                        display.classList.remove('timer-complete');
+                        isRunning = true;
                         updateDisplay();
                         intervalId = window.setInterval(tick, 1000);
                     };
 
                     const pauseTimer = () => {
                         clearTimer();
+                        updateDisplay();
                     };
 
                     const stopTimer = () => {
                         clearTimer();
                         remainingSeconds = 0;
+                        display.classList.remove('timer-complete');
                         updateDisplay();
                     };
 
                     const resetTimer = () => {
                         clearTimer();
                         remainingSeconds = initialSeconds;
+                        display.classList.remove('timer-complete');
                         updateDisplay();
                     };
 
@@ -305,59 +326,172 @@ function getReminderContent(reminder: Reminder, intervalInMinutes: number) {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Wellness Reminder</title>
+            <title>Comodoro</title>
             <style>
+                * {
+                    box-sizing: border-box;
+                }
+                
                 body { 
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-                    padding: 1.2em;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                    padding: 2em 1.5em;
                     color: var(--vscode-editor-foreground);
-                    background-color: var(--vscode-editor-background);
+                    background: linear-gradient(135deg, 
+                        var(--vscode-editor-background) 0%, 
+                        var(--vscode-editorWidget-background) 50%,
+                        var(--vscode-editor-background) 100%);
+                    background-attachment: fixed;
+                    min-height: 100vh;
+                    line-height: 1.6;
+                    max-width: 600px;
+                    margin: 0 auto;
                 }
-                h1 { font-size: 1.5em; color: var(--vscode-textLink-foreground); }
-                p, li { font-size: 1.1em; }
-                ol { padding-left: 20px; }
-                .intro { font-style: italic; opacity: 0.8; margin-bottom: 1.5em; }
-                .timer {
-                    margin-top: 1.5em;
+                
+                .intro { 
+                    font-style: italic; 
+                    opacity: 0.85; 
+                    margin-bottom: 2em;
                     padding: 1em;
-                    border: 1px solid var(--vscode-editorWidget-border);
-                    border-radius: 6px;
                     background: var(--vscode-editorWidget-background);
+                    border-left: 3px solid var(--vscode-textLink-foreground);
+                    border-radius: 4px;
+                    font-size: 0.95em;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 }
-                .timer h2 {
-                    margin: 0 0 0.5em;
-                    font-size: 1.2em;
-                }
-                .timer-display {
-                    font-size: 2em;
+                
+                h1 { 
+                    font-size: 1.8em; 
+                    color: var(--vscode-textLink-foreground);
+                    margin: 0 0 1.2em 0;
                     font-weight: 600;
-                    margin-bottom: 0.6em;
+                    line-height: 1.3;
                 }
+                
+                ol { 
+                    padding-left: 1.8em;
+                    margin: 0 0 2em 0;
+                }
+                
+                ol li {
+                    font-size: 1.05em;
+                    margin-bottom: 0.8em;
+                    padding-left: 0.3em;
+                    line-height: 1.5;
+                }
+                
+                ol li:last-child {
+                    margin-bottom: 0;
+                }
+                
+                .timer {
+                    margin-top: 2em;
+                    padding: 1.8em;
+                    border: 1px solid var(--vscode-editorWidget-border);
+                    border-radius: 12px;
+                    background: var(--vscode-editorWidget-background);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                }
+                
+                .timer-header {
+                    margin-bottom: 1.2em;
+                }
+                
+                .timer-header h2 {
+                    margin: 0;
+                    font-size: 1.1em;
+                    font-weight: 500;
+                    color: var(--vscode-descriptionForeground);
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    opacity: 0.8;
+                }
+                
+                .timer-display-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 1.5em 0;
+                    position: relative;
+                }
+                
+                .timer-display {
+                    font-size: 3.5em;
+                    font-weight: 700;
+                    font-variant-numeric: tabular-nums;
+                    color: var(--vscode-textLink-foreground);
+                    text-align: center;
+                    position: relative;
+                    padding: 0.3em 0;
+                    transition: all 0.3s ease;
+                }
+                
+                .timer-display.timer-complete {
+                    color: var(--vscode-errorForeground);
+                    animation: pulse 1s ease-in-out;
+                }
+                
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                }
+                
                 .timer-controls {
                     display: flex;
-                    gap: 8px;
+                    gap: 0.6em;
                     flex-wrap: wrap;
+                    justify-content: center;
+                    margin-top: 1.5em;
                 }
+                
                 .timer-controls button {
+                    border: none;
+                    border-radius: 6px;
+                    padding: 0.7em 1.4em;
+                    cursor: pointer;
+                    font-size: 0.95em;
+                    font-weight: 500;
+                    transition: all 0.2s ease;
+                    min-width: 80px;
+                }
+                
+                .timer-controls .btn-primary {
                     background: var(--vscode-button-background);
                     color: var(--vscode-button-foreground);
-                    border: none;
-                    border-radius: 4px;
-                    padding: 6px 12px;
-                    cursor: pointer;
                 }
-                .timer-controls button.secondary {
+                
+                .timer-controls .btn-primary:hover {
+                    background: var(--vscode-button-hoverBackground);
+                    transform: translateY(-1px);
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                }
+                
+                .timer-controls .btn-secondary {
                     background: var(--vscode-button-secondaryBackground);
                     color: var(--vscode-button-secondaryForeground);
                 }
+                
+                .timer-controls .btn-secondary:hover {
+                    background: var(--vscode-button-secondaryHoverBackground);
+                    transform: translateY(-1px);
+                }
+                
+                .timer-controls button:active {
+                    transform: translateY(0);
+                }
+                
                 .timer-controls button:focus {
-                    outline: 1px solid var(--vscode-focusBorder);
+                    outline: 2px solid var(--vscode-focusBorder);
                     outline-offset: 2px;
+                }
+                
+                .timer-controls button:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
                 }
             </style>
         </head>
         <body>
-            <p class="intro">You've been focused for ${intervalInMinutes} minutes! Taking a moment to move is key to staying healthy and sharp.</p>
+            <p class="intro">You've been focused for ${intervalInMinutes} ${intervalInMinutes === 1 ? 'minute' : 'minutes'}! Taking a moment to move is key to staying healthy and sharp.</p>
             <h1>${reminder.text}</h1>
             <ol>
                 ${instructions}
@@ -370,8 +504,8 @@ function getReminderContent(reminder: Reminder, intervalInMinutes: number) {
 
 // --- SIDEBAR VIEW PROVIDER ---
 
-class WellnessReminderViewProvider implements vscode.WebviewViewProvider {
-    public static readonly viewType = 'wellness-reminder.settingsView';
+class ComodoroViewProvider implements vscode.WebviewViewProvider {
+    public static readonly viewType = 'comodoro.settingsView';
     private _view?: vscode.WebviewView;
 
     constructor(
@@ -403,7 +537,7 @@ class WellnessReminderViewProvider implements vscode.WebviewViewProvider {
                     this._context.globalState.update('reminderInterval', data.interval);
                     this._context.globalState.update('stretchEnabled', data.stretchEnabled);
                     this._context.globalState.update('coreEnabled', data.coreEnabled);
-                    vscode.commands.executeCommand('wellness-reminder.restartTimer');
+                    vscode.commands.executeCommand('comodoro.restartTimer');
                     break;
             }
         });
@@ -462,12 +596,12 @@ let reminderWebviewPanel: vscode.WebviewPanel | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
 
-    const provider = new WellnessReminderViewProvider(context.extensionUri, context);
+    const provider = new ComodoroViewProvider(context.extensionUri, context);
 
     context.subscriptions.push(
-        vscode.window.registerWebviewViewProvider(WellnessReminderViewProvider.viewType, provider));
+        vscode.window.registerWebviewViewProvider(ComodoroViewProvider.viewType, provider));
 
-    context.subscriptions.push(vscode.commands.registerCommand('wellness-reminder.restartTimer', () => {
+    context.subscriptions.push(vscode.commands.registerCommand('comodoro.restartTimer', () => {
         if (reminderInterval) { clearInterval(reminderInterval); }
         
         const isEnabled = context.globalState.get('extensionEnabled', true);
@@ -477,7 +611,7 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
     // Initial start of the timer
-    vscode.commands.executeCommand('wellness-reminder.restartTimer');
+    vscode.commands.executeCommand('comodoro.restartTimer');
 }
 
 function startTimer(context: vscode.ExtensionContext) {
@@ -522,8 +656,8 @@ function startTimer(context: vscode.ExtensionContext) {
         } else {
             // Otherwise, create a new panel.
             reminderWebviewPanel = vscode.window.createWebviewPanel(
-                'wellnessReminder',
-                'Wellness Reminder',
+                'comodoroReminder',
+                'Comodoro',
                 { viewColumn: vscode.ViewColumn.Two, preserveFocus: true },
                 { enableScripts: true }
             );
@@ -542,7 +676,7 @@ function startTimer(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-    console.log('Wellness Reminder: Deactivating extension.');
+    console.log('Comodoro: Deactivating extension.');
     if (reminderInterval) {
         clearInterval(reminderInterval);
     }

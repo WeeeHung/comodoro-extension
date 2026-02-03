@@ -1,7 +1,8 @@
 {
-  "name": "wellness-reminder",
-  "displayName": "Wellness Reminder",
+  "name": "comodoro",
+  "displayName": "Comodoro",
   "description": "A lightweight extension to remind you to stretch and do core exercises.",
+  "publisher": "WeeHung",
   "repository": {
     "type": "git",
     "url": "https://github.com/your-username/wellness-reminder.git"
@@ -14,31 +15,29 @@
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished",
-    "onCommand:wellness-reminder.showReminder",
-    "onView:wellness-reminder.settingsView"
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "wellness-reminder.showReminder",
-        "title": "Show Wellness Reminder"
+        "command": "comodoro.showReminder",
+        "title": "Show Comodoro Reminder"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "wellness-reminder",
-          "title": "Wellness Reminder",
+          "id": "comodoro",
+          "title": "Comodoro",
           "icon": "images/heart.svg"
         }
       ]
     },
     "views": {
-      "wellness-reminder": [
+      "comodoro": [
         {
-          "id": "wellness-reminder.settingsView",
+          "id": "comodoro.settingsView",
           "name": "Settings",
           "type": "webview"
         }

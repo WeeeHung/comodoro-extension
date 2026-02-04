@@ -96,6 +96,331 @@ const stretchReminders: Reminder[] = [
             label: 'Upper trap hold (15s)',
             seconds: 15
         }
+    },
+    {
+        text: 'Neck rotation stretch!',
+        details: [
+            'Sit tall and slowly turn your head to the right.',
+            'Hold for 15 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Neck rotation hold (15s)',
+            seconds: 15
+        }
+    },
+    {
+        text: 'Chin tucks for neck posture!',
+        details: [
+            'Sit tall with shoulders relaxed.',
+            'Gently glide your chin straight back (no tilt).',
+            'Hold for 5 seconds and repeat 8 times.'
+        ],
+        timer: {
+            label: 'Chin tuck hold (5s)',
+            seconds: 5
+        }
+    },
+    {
+        text: 'Levator scapulae neck stretch!',
+        details: [
+            'Turn your head 45 degrees to the right.',
+            'Gently look down toward your armpit.',
+            'Hold for 20 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Levator scap hold (20s)',
+            seconds: 20
+        }
+    },
+    {
+        text: 'Neck nods mobility!',
+        details: [
+            'Gently nod your chin toward your chest.',
+            'Return to neutral and look slightly upward.',
+            'Repeat 8 slow, controlled reps.'
+        ]
+    },
+    {
+        text: 'Wrist flexor stretch!',
+        details: [
+            'Extend your right arm with your palm up.',
+            'Use your left hand to gently pull fingers down.',
+            'Hold for 20 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Wrist flexor hold (20s)',
+            seconds: 20
+        }
+    },
+    {
+        text: 'Wrist extensor stretch!',
+        details: [
+            'Extend your right arm with your palm down.',
+            'Use your left hand to gently pull fingers toward you.',
+            'Hold for 20 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Wrist extensor hold (20s)',
+            seconds: 20
+        }
+    },
+    {
+        text: 'Prayer wrist stretch!',
+        details: [
+            'Place your palms together at chest height.',
+            'Lower your hands toward your waist while keeping palms together.',
+            'Hold for 15 seconds.'
+        ],
+        timer: {
+            label: 'Prayer stretch (15s)',
+            seconds: 15
+        }
+    },
+    {
+        text: 'Reverse prayer wrist stretch!',
+        details: [
+            'Place the backs of your hands together in front of your chest.',
+            'Gently raise your elbows until you feel a stretch.',
+            'Hold for 15 seconds.'
+        ],
+        timer: {
+            label: 'Reverse prayer (15s)',
+            seconds: 15
+        }
+    },
+    {
+        text: 'Thumb stretch!',
+        details: [
+            'Extend your right arm with your palm up.',
+            'Gently pull your thumb back with the other hand.',
+            'Hold for 15 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Thumb stretch (15s)',
+            seconds: 15
+        }
+    },
+    {
+        text: 'Wrist circles with straight arms!',
+        details: [
+            'Extend both arms forward at shoulder height.',
+            'Make slow circles with your wrists 10 times each direction.'
+        ]
+    },
+    {
+        text: 'Upper back reach stretch!',
+        details: [
+            'Interlace your fingers in front of you.',
+            'Round your upper back and reach forward.',
+            'Hold for 20 seconds.'
+        ],
+        timer: {
+            label: 'Upper back reach (20s)',
+            seconds: 20
+        }
+    },
+    {
+        text: 'Thoracic extension over chair!',
+        details: [
+            'Sit tall with hands behind your head.',
+            'Gently lift your chest and look slightly up.',
+            'Hold for 10 seconds and repeat 3 times.'
+        ],
+        timer: {
+            label: 'Thoracic extension (10s)',
+            seconds: 10
+        }
+    },
+    {
+        text: 'Shoulder blade squeeze!',
+        details: [
+            'Sit tall and draw your shoulder blades together.',
+            'Hold for 5 seconds, then relax.',
+            'Repeat 10 times.'
+        ],
+        timer: {
+            label: 'Scap squeeze (5s)',
+            seconds: 5
+        }
+    },
+    {
+        text: 'Seated thoracic rotation!',
+        details: [
+            'Cross your arms over your chest.',
+            'Rotate your upper back to the right.',
+            'Hold for 15 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Thoracic rotation (15s)',
+            seconds: 15
+        }
+    },
+    {
+        text: 'Seated pelvic tilts!',
+        details: [
+            'Sit tall with feet flat on the floor.',
+            'Gently tilt your pelvis forward and back.',
+            'Repeat 10 slow reps.'
+        ]
+    },
+    {
+        text: 'Seated knee-to-chest stretch!',
+        details: [
+            'Sit tall and hug your right knee toward your chest.',
+            'Keep your back straight and shoulders relaxed.',
+            'Hold for 20 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Knee-to-chest (20s)',
+            seconds: 20
+        }
+    },
+    {
+        text: 'Standing back extension!',
+        details: [
+            'Stand with feet hip-width apart.',
+            'Place hands on your lower back and gently arch backward.',
+            'Hold for 10 seconds, then return to neutral.'
+        ],
+        timer: {
+            label: 'Back extension (10s)',
+            seconds: 10
+        }
+    },
+    {
+        text: 'Seated forward fold for lower back!',
+        details: [
+            'Sit with feet flat and hinge forward slightly.',
+            'Let your arms hang and relax your lower back.',
+            'Hold for 15 seconds.'
+        ],
+        timer: {
+            label: 'Forward fold (15s)',
+            seconds: 15
+        }
+    },
+    {
+        text: 'Seated figure-four glute stretch!',
+        details: [
+            'Cross your right ankle over your left knee.',
+            'Sit tall and gently hinge forward.',
+            'Hold for 20 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Figure-four hold (20s)',
+            seconds: 20
+        }
+    },
+    {
+        text: 'Standing figure-four stretch!',
+        details: [
+            'Stand and rest your right ankle over your left knee.',
+            'Sit back as if into a chair until you feel your glute stretch.',
+            'Hold for 15 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Standing figure-four (15s)',
+            seconds: 15
+        }
+    },
+    {
+        text: 'Seated glute stretch!',
+        details: [
+            'Cross your right leg over your left thigh.',
+            'Gently pull your knee toward your chest.',
+            'Hold for 20 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Glute stretch (20s)',
+            seconds: 20
+        }
+    },
+    {
+        text: 'Standing glute kickbacks!',
+        details: [
+            'Stand tall and hold a chair for balance.',
+            'Kick your right leg back without arching your back.',
+            'Do 10 controlled reps per side.'
+        ]
+    },
+    {
+        text: 'Standing hip flexor stretch!',
+        details: [
+            'Step your right foot back into a small lunge.',
+            'Tuck your pelvis and feel the stretch in the front of the hip.',
+            'Hold for 20 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Hip flexor hold (20s)',
+            seconds: 20
+        }
+    },
+    {
+        text: 'Seated hip opener!',
+        details: [
+            'Sit with ankles below knees and gently press knees outward.',
+            'Keep your back tall and chest open.',
+            'Hold for 20 seconds.'
+        ],
+        timer: {
+            label: 'Hip opener (20s)',
+            seconds: 20
+        }
+    },
+    {
+        text: 'Hip circles while standing!',
+        details: [
+            'Stand with hands on your hips.',
+            'Make slow circles with your hips 10 times each direction.'
+        ]
+    },
+    {
+        text: 'Seated hip windshield wipers!',
+        details: [
+            'Sit with knees bent and feet flat, a bit wider than hips.',
+            'Let both knees fall gently side to side.',
+            'Repeat 10 times each way.'
+        ]
+    },
+    {
+        text: 'Standing side leg swings!',
+        details: [
+            'Stand tall holding a desk for balance.',
+            'Swing one leg gently side to side.',
+            'Do 10 swings per side.'
+        ]
+    },
+    {
+        text: 'Stand up and reach tall!',
+        details: [
+            'Stand and interlace your fingers overhead.',
+            'Reach up and lengthen your spine.',
+            'Hold for 15 seconds.'
+        ],
+        timer: {
+            label: 'Overhead reach (15s)',
+            seconds: 15
+        }
+    },
+    {
+        text: 'Sit-to-stand reps!',
+        details: [
+            'Stand up from your chair without using your hands.',
+            'Sit back down with control.',
+            'Repeat 8 times.'
+        ]
+    },
+    {
+        text: 'Standing side bends!',
+        details: [
+            'Stand with feet hip-width apart.',
+            'Reach your right arm overhead and bend to the left.',
+            'Hold for 15 seconds, then switch sides.'
+        ],
+        timer: {
+            label: 'Side bend hold (15s)',
+            seconds: 15
+        }
     }
 ];
 
